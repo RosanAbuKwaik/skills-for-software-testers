@@ -34,3 +34,15 @@ overwriting an existing report.
 Version 0.8. Tested by hand on several requirements. The ISTQB wording in
 `references/quality-criteria.md` was written from memory and is not yet checked against the
 CTFL v4.0 syllabus.
+
+## estimating-testing-effort
+
+Estimates how many hours one tester needs for a testing task. Reads the task (pasted text, a
+file, or a Notion page, read only), counts what drives the work, splits it into testing
+activities, and gives each one an optimistic, most likely and pessimistic number of hours
+(three-point estimation). Returns the expected total, the range, the assumptions and what is
+missing. The hours are judgment, not measured data. It never writes to a board or tracker.
+
+Use: `Estimate this task: <text or Notion link>`
+
+Status: version 0.2, draft. Tested by hand on one real ticket.
