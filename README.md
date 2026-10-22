@@ -45,4 +45,4 @@ missing. The hours are judgment, not measured data. It never writes to a board o
 
 Use: `Estimate this task: <text or Notion link>`
 
-Status: version 0.2, draft. Tested by hand on one real ticket.
+Status: version 0.3, draft. Test automation is estimated as its own activity. Tested by hand on one real ticket.

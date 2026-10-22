@@ -2,7 +2,8 @@
 name: estimating-testing-effort
 description: >
   Estimates how many hours a software tester needs for a task: splits the task into testing
-  activities (requirement review, test design, execution, bug retest, regression), sizes each
+  activities (requirement review, test design, execution, bug retest, regression, test
+  automation), sizes each
   one, and returns an expected value with an optimistic-to-pessimistic range and the
   assumptions behind it, using ISTQB three-point estimation. Accepts a ticket, user story,
   feature description or sprint backlog, including a Notion page. Use
@@ -74,7 +75,8 @@ Estimate progress:
    has none, and size every activity from these counts so that the same task gives the same
    estimate.
 2. **Split it into activities.** Start from: requirement review, test design, execution, bug
-   retest, regression. Drop what does not apply, and add what the task needs (for example data
+   retest, regression, test automation. Always keep test automation as its own row; if the
+   user says there is no automation, give it 0 and say so. Drop what else does not apply, and add what the task needs (for example data
    setup or environment setup). Name each activity.
 3. **Size each activity.** Use three-point estimation. Give an optimistic, a most likely and a pessimistic number of hours.
    Expected = (optimistic + 4 x most likely + pessimistic) / 6. Total expected = the sum of
@@ -138,7 +140,7 @@ with a reset link.
 
 Assistant:
 # Estimate: Forgot password link
-Expected: 5.8 hours (range 3.5 to 9)
+Expected: 7.9 hours (range 4.5 to 13)
 Method: three-point estimation, hours are judgment | Source: text pasted by the user
 
 ## Counts
@@ -153,7 +155,8 @@ Method: three-point estimation, hours are judgment | Source: text pasted by the 
 | Test design | 1 | 1.5 | 2.5 | 1.6 | Link, e-mail, expired link |
 | Execution | 1.5 | 2.5 | 4 | 2.6 | Needs an e-mail test inbox |
 | Bug retest | 0.5 | 1 | 1.5 | 1.0 | One round of fixes assumed |
-| Total | 3.5 | 5.5 | 9 | 5.8 | Sums of the rows above |
+| Test automation | 1 | 2 | 4 | 2.2 | Two scenarios: request the link, use the link |
+| Total | 4.5 | 7.5 | 13 | 7.9 | Sums of the rows above |
 
 ## Assumptions
 - An e-mail test inbox is available, so no setup time is counted.
