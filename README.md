@@ -46,3 +46,17 @@ missing. The hours are judgment, not measured data. It never writes to a board o
 Use: `Estimate this task: <text or Notion link>`
 
 Status: version 0.3, draft. Test automation is estimated as its own activity. Tested by hand on one real ticket.
+
+## designing-test-cases
+
+Designs test cases from a requirement in any format (pasted text, a file, or a Notion page,
+read only). Numbers the rules, picks an ISTQB technique for each (boundary values,
+equivalence partitioning, decision table, state transition, use case, error guessing), and
+gives every case preconditions, steps, test data, an expected result and a risk-based
+priority. It never invents an expected result: an unknown one is written as "Unknown" with the
+open question. After one approval it can create a Notion database with a Table view and a
+Board view grouped by Status (Draft, Needs answer, Ready, Obsolete).
+
+Use: `Design test cases using the designing-test-cases skill: <text or Notion link>`
+
+Status: version 0.3, draft. Tested by hand on four tickets.
