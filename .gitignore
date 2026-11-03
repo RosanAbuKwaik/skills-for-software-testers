@@ -1,2 +1,5 @@
 requirement-analysis/
 *.bak
+qa-trends/
+profile.md
+node_modules/
