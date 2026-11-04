@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>CI/CD Pipelines</title>
+<link href="https://fonts.googleapis.com/css2?family=Caveat:wght@600;700&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F3F0FF; --ink: #2B2D42; --panel: #FFFFFF; --muted: #5C5F77;
+    --violet: #7B61FF; --violet-soft: #E4DEFF;
+    --blue: #3D7BFF; --blue-soft: #DCE8FF;
+    --pink: #F0508C; --pink-soft: #FFE0EC;
+    --yellow: #FFC93C; --yellow-soft: #FFF2C7;
+    --green: #2DB67C; --green-soft: #D6F5E7;
+    --red: #E5484D;
+  }
+  html, body { margin: 0; background: #E9E5FA; }
+  figure { margin: 0 auto; max-width: 1080px; padding: 16px; box-sizing: border-box; }
+  svg { width: 100%; height: auto; display: block; }
+  .hand { font-family: "Patrick Hand", "Segoe Print", "Comic Sans MS", cursive; fill: var(--ink); }
+  .title { font-family: "Caveat", "Segoe Print", cursive; font-weight: 700; fill: var(--ink); }
+  .stroke { fill: none; stroke: var(--ink); stroke-width: 2.6; stroke-linecap: round; stroke-linejoin: round; }
+  .flow { fill: none; stroke-width: 4; stroke-linecap: round; stroke-dasharray: 10 12; animation: march 0.9s linear infinite; }
+  @keyframes march { to { stroke-dashoffset: -22; } }
+  .pulse { animation: pulse 2.4s ease-in-out infinite; }
+  @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: .35; } }
+  @media (prefers-reduced-motion: reduce) {
+    .flow { animation: none; stroke-dasharray: none; }
+    .pulse { animation: none; }
+    .traveller { display: none; }
+  }
+</style>
+</head>
+<body>
+<figure>
+<svg id="art" data-cycle-ms="8000" viewBox="0 0 1080 1580" xmlns="http://www.w3.org/2000/svg" role="img" aria-labelledby="t d">
+  <title id="t">CI/CD Pipelines</title>
+  <desc id="d">Hand-drawn poster in three panels: the development lifecycle, what CI and CD each do, and the CI/CD loop as an infinity sign.</desc>
+  <defs>
+    <!-- wobble: makes straight vector lines look hand drawn -->
+    <filter id="rough" filterUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1580">
+      <feTurbulence type="fractalNoise" baseFrequency="0.018" numOctaves="2" seed="4"/>
+      <feDisplacementMap in="SourceGraphic" scale="5"/>
+    </filter>
+    <filter id="rough2" filterUnits="userSpaceOnUse" x="0" y="0" width="1080" height="1580">
+      <feTurbulence type="fractalNoise" baseFrequency="0.022" numOctaves="2" seed="11"/>
+      <feDisplacementMap in="SourceGraphic" scale="6"/>
+    </filter>
+    <marker id="arrow" viewBox="0 0 12 12" refX="9" refY="6" markerWidth="9" markerHeight="9" orient="auto-start-reverse">
+      <path d="M1 1 L10 6 L1 11" fill="none" stroke="context-stroke" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round"/>
+    </marker>
+  </defs>
+
+  <rect width="1080" height="1580" fill="var(--paper)"/>
+  <g id="layer"></g>
+</svg>
+</figure>
+
+<script>
+const NS = "http://www.w3.org/2000/svg";
+const layer = document.getElementById("layer");
+function el(tag, attrs, parent = layer, text) {
+  const n = document.createElementNS(NS, tag);
+  for (const k in attrs) n.setAttribute(k, attrs[k]);
+  if (text != null) n.textContent = text;
+  parent.appendChild(n);
+  return n;
+}
+// A sketchy box: a filled shape plus two slightly different outlines.
+function box(x, y, w, h, fill, label, opts = {}) {
+  const g = el("g", Object.assign({ "data-node": "" }, PANEL > 1 ? { "data-repeat": "" } : {}));
+  const r = opts.r ?? 14;
+  el("rect", { x, y, width: w, height: h, rx: r, fill, filter: "url(#rough)" }, g);
+  el("rect", { x, y, width: w, height: h, rx: r, class: "stroke", filter: "url(#rough)" }, g);
+  el("rect", { x: x + 2, y: y + 1, width: w - 3, height: h - 2, rx: r, class: "stroke", "stroke-width": 1.3, opacity: .55, filter: "url(#rough2)" }, g);
+  const lines = String(label).split("\n");
+  const fs = opts.fs ?? 24;
+  lines.forEach((ln, i) => el("text", {
+    x: x + w / 2, y: y + h / 2 + (i - (lines.length - 1) / 2) * fs * 1.05 + fs * 0.35,
+    "text-anchor": "middle", class: "hand", "font-size": fs, "font-weight": opts.bold ? 700 : 400
+  }, g, ln));
+  return g;
+}
+function line(d, color, opts = {}) {
+  const attrs = { d, stroke: color, class: opts.flow === false ? "stroke" : "flow", filter: "url(#rough2)" };
+  if (opts.flow === false) attrs.style = `stroke:${color}`;
+  if (opts.arrow !== false) attrs["marker-end"] = "url(#arrow)";
+  return el("path", attrs);
+}
+function note(x, y, text, opts = {}) {
+  const lines = text.split("\n");
+  lines.forEach((ln, i) => el("text", { x, y: y + i * (opts.fs ?? 21) * 1.15, class: "hand", "font-size": opts.fs ?? 21,
+    "text-anchor": opts.anchor ?? "start", fill: opts.color ?? "var(--muted)", style: `fill:${opts.color ?? "var(--muted)"}` }, layer, ln));
+}
+let PANEL = 0;
+function panel(y, h, n, title, color) {
+  PANEL = Number(n);
+  el("rect", { x: 30, y, width: 1020, height: h, rx: 22, fill: "var(--panel)", filter: "url(#rough)" });
+  el("rect", { x: 30, y, width: 1020, height: h, rx: 22, class: "stroke", "stroke-width": 3, filter: "url(#rough)" });
+  el("circle", { cx: 72, cy: y + 42, r: 24, fill: color, filter: "url(#rough)" });
+  el("circle", { cx: 72, cy: y + 42, r: 24, class: "stroke", filter: "url(#rough2)" });
+  el("text", { x: 72, y: y + 52, "text-anchor": "middle", class: "title", "font-size": 34, fill: "#fff", style: "fill:#fff" }, layer, n);
+  el("text", { x: 110, y: y + 56, class: "title", "font-size": 44 }, layer, title);
+  el("path", { d: `M110 ${y + 66} q 200 8 ${title.length * 17} -2`, class: "stroke", style: `stroke:${color}`, "stroke-width": 4, filter: "url(#rough2)" });
+}
+
+/* ---------- Header ---------- */
+el("rect", { x: 40, y: 30, width: 330, height: 110, rx: 40, fill: "var(--violet-soft)", filter: "url(#rough)" });
+el("rect", { x: 40, y: 30, width: 330, height: 110, rx: 40, class: "stroke", "stroke-width": 3.5, filter: "url(#rough)" });
+el("text", { x: 205, y: 112, "text-anchor": "middle", class: "title", "font-size": 92, fill: "var(--violet)", style: "fill:var(--violet);stroke:var(--ink);stroke-width:2;paint-order:stroke" }, layer, "CI/CD");
+el("text", { x: 395, y: 112, class: "title", "font-size": 72 }, layer, "Pipelines");
+el("text", { x: 400, y: 150, class: "hand", "font-size": 24, style: "fill:var(--muted)" }, layer, "every push gets built, tested and shipped automatically");
+// little branching pipe in the corner
+line("M760 85 L820 85", "var(--blue)", { arrow: false, flow: false });
+line("M820 85 C 860 85, 860 50, 900 50 L 980 50", "var(--blue)", { arrow: false, flow: false });
+line("M820 85 L 980 85", "var(--blue)", { arrow: false, flow: false });
+line("M820 85 C 860 85, 860 120, 900 120 L 980 120", "var(--blue)", { arrow: false, flow: false });
+for (const [cx, cy] of [[760, 85], [820, 85], [980, 50], [980, 85], [980, 120]]) {
+  el("circle", { cx, cy, r: 9, fill: "var(--green)", filter: "url(#rough)" });
+  el("circle", { cx, cy, r: 9, class: "stroke", "stroke-width": 2 });
+}
+
+/* ---------- Panel 1: lifecycle ---------- */
+panel(175, 375, "1", "Software development lifecycle", "var(--violet)");
+box(450, 265, 180, 60, "#D9D9E3", "Develop", { bold: true, fs: 28 });
+box(70, 400, 150, 70, "var(--blue-soft)", "Staged\nchanges");
+box(285, 410, 140, 52, "var(--pink-soft)", "Commit");
+box(490, 410, 120, 52, "var(--yellow)", "Push", { bold: true });
+box(680, 410, 150, 52, "var(--green-soft)", "Pipeline", { bold: true });
+box(890, 410, 140, 52, "var(--pink-soft)", "Production");
+line("M450 295 C 260 290, 150 320, 145 392", "var(--violet)");
+line("M222 436 L 278 436", "var(--violet)");
+line("M428 436 L 483 436", "var(--violet)");
+line("M613 436 L 673 436", "var(--violet)");
+line("M833 436 L 883 436", "var(--violet)");
+line("M960 404 C 955 320, 820 290, 636 295", "var(--violet)");
+note(145, 500, "tracked by git", { anchor: "middle" });
+note(355, 492, "saved locally", { anchor: "middle" });
+note(550, 492, "the pipeline\nstarts here", { anchor: "middle", color: "var(--ink)" });
+note(755, 492, "build, test,\npackage (see 2)", { anchor: "middle" });
+note(960, 492, "live for\nusers", { anchor: "middle" });
+// "local repo" bracket
+line("M75 528 L 425 528", "var(--muted)", { arrow: false, flow: false });
+line("M75 518 L75 538", "var(--muted)", { arrow: false, flow: false });
+line("M425 518 L425 538", "var(--muted)", { arrow: false, flow: false });
+el("rect", { x: 190, y: 515, width: 120, height: 26, fill: "var(--panel)" });
+note(250, 535, "your laptop", { anchor: "middle", color: "var(--ink)" });
+
+/* ---------- Panel 2: CI vs CD ---------- */
+panel(580, 420, "2", "What does each half do?", "var(--blue)");
+// divider
+line("M610 660 L 610 970", "var(--muted)", { arrow: false, flow: false }).setAttribute("stroke-dasharray", "8 10");
+el("text", { x: 320, y: 690, "text-anchor": "middle", class: "title", "font-size": 40, fill: "var(--blue)", style: "fill:var(--blue)" }, layer, "Continuous Integration");
+el("text", { x: 830, y: 690, "text-anchor": "middle", class: "title", "font-size": 40, fill: "var(--pink)", style: "fill:var(--pink)" }, layer, "Continuous Delivery");
+note(320, 722, "build + test every change, so it fits with everyone else's", { anchor: "middle", fs: 20 });
+note(830, 722, "if CI is green, package and release it", { anchor: "middle", fs: 20 });
+box(60, 800, 120, 60, "var(--blue-soft)", "Checkout\nrepo", { fs: 21 });
+box(215, 805, 100, 50, "var(--blue-soft)", "Build", { fs: 22 });
+box(360, 755, 130, 50, "var(--green-soft)", "Unit tests", { fs: 21 });
+box(360, 855, 130, 50, "var(--green-soft)", "Integration\ntests", { fs: 19 });
+box(512, 800, 92, 60, "var(--yellow-soft)", "📦\nPackage", { fs: 19 });
+line("M182 830 L 208 830", "var(--blue)");
+line("M317 830 C 335 830, 335 780, 353 780", "var(--blue)");
+line("M317 830 C 335 830, 335 880, 353 880", "var(--blue)");
+line("M492 780 C 505 780, 505 830, 514 830", "var(--blue)");
+line("M492 880 C 505 880, 505 830, 514 830", "var(--blue)");
+note(260, 945, "runs on every push · a red test stops the line", { anchor: "middle", fs: 20, color: "var(--red)" });
+box(640, 805, 120, 50, "var(--pink-soft)", "Staging", { fs: 22 });
+box(790, 805, 110, 50, "var(--pink-soft)", "E2E tests", { fs: 20 });
+box(930, 795, 100, 70, "var(--green-soft)", "Production", { fs: 19, bold: true });
+line("M606 830 L 633 830", "var(--pink)");
+line("M762 830 L 783 830", "var(--pink)");
+line("M902 830 L 923 830", "var(--pink)");
+note(835, 920, "Delivery: a person approves the last step", { anchor: "middle", fs: 20 });
+note(835, 946, "Deployment: it goes live automatically", { anchor: "middle", fs: 20 });
+
+/* ---------- Panel 3: infinity loop ---------- */
+panel(1030, 520, "3", "Where CI/CD sits: the DevOps loop", "var(--pink)");
+const cx = 540, cy = 1300;
+const loopD = `M ${cx} ${cy} C ${cx + 90} ${cy - 150}, ${cx + 380} ${cy - 150}, ${cx + 380} ${cy}
+  C ${cx + 380} ${cy + 150}, ${cx + 90} ${cy + 150}, ${cx} ${cy}
+  C ${cx - 90} ${cy - 150}, ${cx - 380} ${cy - 150}, ${cx - 380} ${cy}
+  C ${cx - 380} ${cy + 150}, ${cx - 90} ${cy + 150}, ${cx} ${cy} Z`;
+el("path", { d: loopD, fill: "none", stroke: "var(--violet-soft)", "stroke-width": 34, "stroke-linecap": "round", filter: "url(#rough)" });
+const loop = el("path", { id: "loop", d: loopD, class: "flow", stroke: "var(--violet)", filter: "url(#rough2)" });
+el("text", { x: cx - 215, y: cy + 26, "text-anchor": "middle", class: "title", "font-size": 84, fill: "var(--blue)", style: "fill:var(--blue);stroke:var(--ink);stroke-width:2;paint-order:stroke" }, layer, "Dev");
+el("text", { x: cx + 215, y: cy + 26, "text-anchor": "middle", class: "title", "font-size": 84, fill: "var(--pink)", style: "fill:var(--pink);stroke:var(--ink);stroke-width:2;paint-order:stroke" }, layer, "Ops");
+// stages placed along the real path: CI on the left lobe, CD on the right lobe
+const L = loop.getTotalLength();
+const stages = [
+  [0.06, "Package", "var(--pink-soft)", 1, -1],
+  [0.17, "Staging", "var(--pink-soft)", 1, -1],
+  [0.30, "Production", "var(--pink-soft)", 1, 1],
+  [0.42, "Monitor", "#E6E6EE", 1, 1],
+  [0.56, "Plan", "#E6E6EE", -1, -1],
+  [0.67, "Code", "#E6E6EE", -1, -1],
+  [0.80, "Build", "var(--blue-soft)", -1, 1],
+  [0.92, "Test", "var(--blue-soft)", -1, 1],
+];
+stages.forEach(([t, label, fill, sx, sy]) => {
+  const p = loop.getPointAtLength(t * L);
+  el("circle", { cx: p.x, cy: p.y, r: 12, fill: "var(--ink)", filter: "url(#rough)" });
+  const w = 112, h = 44;
+  const bx = p.x - w / 2 + sx * 0, by = p.y + (sy < 0 ? -h - 22 : 22);
+  box(bx, by, w, h, fill, label, { fs: 22, r: 12 });
+});
+// a "change" travelling around the loop
+const dot = el("circle", { r: 13, fill: "var(--yellow)", stroke: "var(--ink)", "stroke-width": 2.5, class: "traveller" });
+el("animateMotion", { dur: "8s", repeatCount: "indefinite", rotate: "auto" }, dot)
+  .appendChild(Object.assign(document.createElementNS(NS, "mpath"), {})).setAttribute("href", "#loop");
+// direction chevrons, so the loop reads without animation
+for (const t of [0.115, 0.235, 0.36, 0.49, 0.615, 0.735, 0.86, 0.97]) {
+  const a = loop.getPointAtLength(t * L), b = loop.getPointAtLength((t + 0.004) * L);
+  const ang = Math.atan2(b.y - a.y, b.x - a.x) * 180 / Math.PI;
+  el("path", { d: "M -9 -9 L 3 0 L -9 9", transform: `translate(${a.x} ${a.y}) rotate(${ang})`, class: "stroke", style: "stroke:var(--violet)", "stroke-width": 4 });
+}
+// legend: what CI and CD cover on the loop
+const lg = [[95, "var(--blue-soft)", "CI = Build + Test"], [345, "var(--pink-soft)", "CD = Package → Staging → Production"], [760, "#E6E6EE", "people: plan, code, watch"]];
+lg.forEach(([x, fill, txt]) => { el("rect", { x, y: 1478, width: 26, height: 18, rx: 4, fill, stroke: "var(--ink)", "stroke-width": 1.5 }); note(x + 34, 1493, txt, { color: "var(--ink)", fs: 21 }); });
+note(cx, 1530, "the yellow dot is one change: coded, built, tested, packaged, shipped, watched, then the next plan", { anchor: "middle", fs: 20 });
+</script>
+</body>
+</html>

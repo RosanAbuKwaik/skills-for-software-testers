@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><title>How does a request reach the API?</title>
+<style>html,body{margin:0;background:#E9EDF5} figure{margin:0 auto;max-width:1080px}</style></head>
+<body><figure>
+<svg id="art" viewBox="0 0 1080 1080" xmlns="http://www.w3.org/2000/svg" data-cycle-ms="4000" role="img" aria-labelledby="t d">
+<title id="t">How does a request reach the API?</title>
+<desc id="d">Two steps: the app asks the API, the API answers.</desc>
+<style>
+:root{--bg:#F4F7FB;--card:#FFF;--theme:#2F3FBF;--accent:#D63A6E;--ink:#1B2233;--muted:#5B6478;--cycle:4000ms}
+text{font-family:Inter,"Segoe UI",system-ui,sans-serif;fill:var(--ink)}
+.l1{font-size:52px;font-weight:800}.l2{font-size:28px;font-weight:700}.l3{font-size:22px;fill:var(--muted)}
+.box{fill:var(--card);stroke:var(--theme);stroke-width:3}
+.flow{fill:none;stroke-width:4;stroke-dasharray:14 10;animation:march 1s linear infinite}
+.flow[data-kind="ask"]{stroke:var(--theme)}
+.flow[data-kind="answer"]{stroke:var(--muted);stroke-dasharray:2 8}
+@keyframes march{to{stroke-dashoffset:-24}}
+[data-step]{opacity:.25;animation:lit var(--cycle) linear infinite}
+[data-step="2"]{animation:none}
+@keyframes lit{0%{opacity:.25}3%{opacity:1}45%{opacity:1}50%{opacity:.25}100%{opacity:.25}}
+@media (prefers-reduced-motion: reduce){
+ .flow{animation:none}
+ .flow[data-kind="ask"]{stroke-dasharray:none}
+ .flow[data-kind="answer"]{stroke-dasharray:none}
+}
+</style>
+<defs><marker id="ah" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="9" markerHeight="9" orient="auto"><path d="M1 1 L10 6 L1 11" fill="none" stroke="context-stroke" stroke-width="2"/></marker></defs>
+<rect width="100%" height="100%" fill="var(--bg)"/>
+<text class="l1" x="80" y="140">How does a request reach the API?</text>
+<g class="legend">
+ <line data-legend="ask" class="flow" data-kind="ask" x1="700" y1="200" x2="760" y2="200"/><text class="l3" x="770" y="208">ask</text><text class="l2" x="230" y="372">Overlapping label</text>
+ <line data-legend="answer" class="flow" data-kind="answer" x1="850" y1="200" x2="910" y2="200"/><text class="l3" x="920" y="208">answer</text>
+</g>
+<g data-node><rect class="box" x="100" y="300" width="240" height="100" rx="16"/><text class="l2" x="220" y="360" text-anchor="middle">App</text></g>
+<g data-node><rect class="box" x="740" y="300" width="240" height="100" rx="16"/><text class="l2" x="860" y="360" text-anchor="middle">API</text></g>
+<g data-step="1"><path class="flow" data-kind="ask" marker-end="url(#ah)" d="M340 520 L 740 520"/><text class="l3" x="540" y="500" text-anchor="middle">GET /orders/42</text></g>
+<g data-step="2"><path class="flow" data-kind="answer" marker-end="url(#ah)" d="M740 640 L 340 640"/><text class="l3" x="540" y="620" text-anchor="middle">200, order 42 shipped</text></g>
+<text class="l3" x="80" y="1040">Source: example docs</text>
+</svg></figure></body></html>

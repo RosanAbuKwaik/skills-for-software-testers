@@ -3,3 +3,12 @@ requirement-analysis/
 qa-trends/
 profile.md
 node_modules/
+
+# designing-infographics: generated output
+infographics/
+**/checks/
+designing-infographics/scripts/fixtures/*.svg
+designing-infographics/scripts/fixtures/*.png
+designing-infographics/scripts/fixtures/*.gif
+designing-infographics/scripts/fixtures/*.mp4
+designing-infographics/scripts/fixtures/README.md
