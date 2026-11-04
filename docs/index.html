@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>designing-infographics · Rosan Abu Kwaik</title>
+<meta name="description" content="A Claude skill that turns any topic or article into a clear explainer graphic: PNG, MP4, GIF and animated HTML, checked before delivery.">
+<meta property="og:title" content="designing-infographics: from a hard article to a graphic you get in 10 seconds">
+<meta property="og:description" content="A Claude skill that turns a topic or a link into a ByteByteGo-style graphic with moving arrows. Free download.">
+<meta property="og:image" content="https://rosanabukwaik.github.io/skills-for-software-testers/example-cicd.png">
+<meta property="og:type" content="website">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Sans+Arabic:wght@400;600;700&family=Inter:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #F5F8F4; --card: #FFFFFF; --ink: #16231C; --muted: #56655C; --line: #DCE5DE;
+    --theme: #1F6B4A; --theme-ink: #FFFFFF; --soft: #E3F0E8; --accent: #B0245E; --code: #EEF3EF;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #101713; --card: #18221C; --ink: #E7EFE9; --muted: #A3B3A8; --line: #2A3A30;
+      --theme: #4FBF8B; --theme-ink: #0C1410; --soft: #1D3027; --accent: #F06A9E; --code: #1F2C25;
+    }
+  }
+  * { box-sizing: border-box; }
+  html { scroll-behavior: smooth; }
+  body { margin: 0; overflow-wrap: anywhere; background: var(--bg); color: var(--ink);
+    font: 17px/1.7 "IBM Plex Sans Arabic", Inter, "Segoe UI", system-ui, sans-serif; }
+  [dir="ltr"] body, body[dir="ltr"] { font-family: Inter, "Segoe UI", system-ui, sans-serif; }
+  a { color: var(--theme); }
+  .wrap { max-width: 1040px; margin: 0 auto; padding: 0 16px; }
+  header { display: flex; align-items: center; justify-content: space-between; padding: 18px 0; gap: 12px; }
+  .brand { font-weight: 700; font-family: Inter, sans-serif; letter-spacing: -.01em; }
+  .brand small { color: var(--muted); font-weight: 400; }
+  .lang { white-space: nowrap; flex-shrink: 0; border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 999px;
+    padding: 6px 14px; font: inherit; font-size: 14px; cursor: pointer; }
+  .hero { display: grid; grid-template-columns: 1.1fr .9fr; gap: 40px; align-items: center; padding: 32px 0 48px; }
+  h1 { font-size: clamp(30px, 5vw, 48px); line-height: 1.2; margin: 0 0 16px; letter-spacing: -.01em; }
+  h1 em { font-style: normal; color: var(--theme); }
+  .lead { color: var(--muted); font-size: 19px; margin: 0 0 28px; }
+  .cta { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 10px; text-decoration: none; border-radius: 14px;
+    padding: 16px 26px; font-weight: 700; font-size: 18px; transition: transform .15s ease, box-shadow .15s ease; }
+  .btn-main { background: var(--theme); color: var(--theme-ink); box-shadow: 0 8px 24px -10px var(--theme); }
+  .btn-main:hover { transform: translateY(-2px); }
+  .btn-ghost { border: 1px solid var(--line); color: var(--ink); background: var(--card); font-weight: 600; font-size: 16px; padding: 14px 20px; }
+  .meta { color: var(--muted); font-size: 14px; margin-top: 12px; }
+  figure { margin: 0; }
+  figure { max-width: 440px; margin-inline: auto; }
+  .shot { width: 100%; height: auto; border-radius: 16px; border: 1px solid var(--line); box-shadow: 0 20px 50px -30px rgba(0,0,0,.35); display: block; }
+  figcaption { color: var(--muted); font-size: 14px; text-align: center; margin-top: 10px; }
+  section { padding: 40px 0; }
+  h2 { font-size: 28px; margin: 0 0 8px; }
+  .sub { color: var(--muted); margin: 0 0 24px; }
+  .grid { display: grid; gap: 16px; }
+  .g5 { grid-template-columns: repeat(5, 1fr); }
+  .g3 { grid-template-columns: repeat(3, 1fr); }
+  .tile, .card, ol.steps li > div { min-width: 0; }
+  .tile, .card { background: var(--card); border: 1px solid var(--line); border-radius: 16px; padding: 20px; }
+  .tile b { display: block; font-family: Inter, sans-serif; font-size: 18px; }
+  .tile span { color: var(--muted); font-size: 15px; }
+  .ico { width: 40px; height: 40px; border-radius: 12px; background: var(--soft); color: var(--theme);
+    display: grid; place-items: center; margin-bottom: 12px; }
+  .card h3 { margin: 0 0 6px; font-size: 19px; }
+  .card p { margin: 0; color: var(--muted); font-size: 16px; }
+  ol.steps { list-style: none; padding: 0; margin: 0; counter-reset: s; display: grid; gap: 14px; }
+  ol.steps li { counter-increment: s; background: var(--card); border: 1px solid var(--line); border-radius: 16px;
+    padding: 18px 20px; display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+  ol.steps li::before { content: counter(s); width: 44px; height: 44px; border-radius: 50%; background: var(--theme);
+    color: var(--theme-ink); display: grid; place-items: center; font-weight: 800; font-family: Inter, sans-serif; }
+  ol.steps h3 { margin: 6px 0 6px; font-size: 18px; }
+  ol.steps p { margin: 0 0 8px; color: var(--muted); }
+  .cmd { display: flex; align-items: center; gap: 8px; background: var(--code); border-radius: 10px; padding: 10px 12px;
+    margin-top: 6px; direction: ltr; text-align: left; }
+  .cmd code { flex: 1; min-width: 0; font: 14px/1.5 ui-monospace, Consolas, monospace; overflow-x: auto; white-space: nowrap; }
+  .cmd .os { font: 12px Inter, sans-serif; color: var(--muted); min-width: 64px; }
+  .copy { border: 1px solid var(--line); background: var(--card); color: var(--ink); border-radius: 8px; padding: 4px 10px;
+    font: 13px Inter, sans-serif; cursor: pointer; }
+  .note { background: var(--soft); border-radius: 14px; padding: 14px 18px; color: var(--ink); font-size: 15px; margin-top: 18px; }
+  .final { text-align: center; background: var(--card); border: 1px solid var(--line); border-radius: 24px; padding: 40px 20px; }
+  footer { color: var(--muted); font-size: 14px; padding: 32px 0 48px; text-align: center; }
+  [data-lang] { display: none; }
+  html[lang="ar"] [data-lang="ar"], html[lang="en"] [data-lang="en"] { display: revert; }
+  @media (max-width: 860px) {
+    .hero { grid-template-columns: 1fr; gap: 28px; }
+    .g5 { grid-template-columns: repeat(2, 1fr); }
+    .g3 { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } .btn { transition: none; } }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <div class="brand">designing-infographics <small>· Rosan Abu Kwaik</small></div>
+    <button class="lang" id="lang" type="button" aria-label="Switch language">English</button>
+  </header>
+
+  <main>
+    <div class="hero">
+      <div>
+        <h1 data-lang="ar">من مقال صعب،<br>لرسمة <em>بتفهمها بـ 10 ثواني</em></h1>
+        <h1 data-lang="en">From a hard article<br>to a graphic <em>you get in 10 seconds</em></h1>
+        <p class="lead" data-lang="ar">سكيل لـ Claude: بتعطيها موضوع أو رابط مقال، وبتعطيك رسمة شرح زي رسمات ByteByteGo، بأسهم بتتحرك، جاهزة لـ LinkedIn.</p>
+        <p class="lead" data-lang="en">A Claude skill: give it a topic or a link, and get a ByteByteGo-style explainer with moving arrows, ready for LinkedIn.</p>
+        <div class="cta">
+          <a class="btn btn-main" href="downloads/designing-infographics-v1.0.0.zip" download>
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.4" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 4v11M7 10l5 5 5-5M5 20h14"/></svg>
+            <span data-lang="ar">نزّل السكيل مجاناً</span><span data-lang="en">Download the skill, free</span>
+          </a>
+          <a class="btn btn-ghost" href="https://github.com/RosanAbuKwaik/skills-for-software-testers/tree/main/designing-infographics">GitHub</a>
+        </div>
+        <div class="meta">v1.0.0 · ZIP · 360 KB · MIT</div>
+      </div>
+      <figure>
+        <img class="shot" src="example-cicd.png" alt="An example graphic made by the skill: CI/CD pipelines as a hand-drawn poster in three panels" width="1080" height="1580" loading="eager">
+        <figcaption data-lang="ar">مثال طلع من السكيل: CI/CD بستايل مرسوم بالإيد</figcaption>
+        <figcaption data-lang="en">Made by the skill: CI/CD as a hand-drawn poster</figcaption>
+      </figure>
+    </div>
+
+    <section>
+      <h2 data-lang="ar">بضغطة وحدة، فولدر فيه كل الصيغ</h2>
+      <h2 data-lang="en">One request, every format in one folder</h2>
+      <p class="sub" data-lang="ar">ما بتسألك شو بدك: بتطلّعلك كل إشي، وإنت بتختار وين تستعمله.</p>
+      <p class="sub" data-lang="en">It does not ask which one you want: you get them all and pick where to use each.</p>
+      <div class="grid g5">
+        <div class="tile"><div class="ico">🖼️</div><b>PNG</b><span data-lang="ar">للبوستات والشات</span><span data-lang="en">posts and chats</span></div>
+        <div class="tile"><div class="ico">🎬</div><b>MP4</b><span data-lang="ar">فيديو لـ LinkedIn</span><span data-lang="en">video for LinkedIn</span></div>
+        <div class="tile"><div class="ico">🔁</div><b>GIF</b><span data-lang="ar">للسلايدات والإيميل</span><span data-lang="en">slides and email</span></div>
+        <div class="tile"><div class="ico">🌐</div><b>HTML</b><span data-lang="ar">أسهم بتتحرك بالمتصفح</span><span data-lang="en">moving arrows in a browser</span></div>
+        <div class="tile"><div class="ico">✏️</div><b>SVG</b><span data-lang="ar">بتتعدّل وبتكبر بدون ما تخرب</span><span data-lang="en">editable, sharp at any size</span></div>
+      </div>
+    </section>
+
+    <section>
+      <h2 data-lang="ar">ليش تثق فيها؟</h2>
+      <h2 data-lang="en">Why you can trust it</h2>
+      <p class="sub" data-lang="ar">انعملت بعقلية QA: الرسمة لازم تكون صح قبل ما تكون حلوة.</p>
+      <p class="sub" data-lang="en">Built with a QA mindset: a graphic has to be right before it is pretty.</p>
+      <div class="grid g3">
+        <div class="card">
+          <div class="ico">✓</div>
+          <h3 data-lang="ar">دقيقة</h3><h3 data-lang="en">Accurate</h3>
+          <p data-lang="ar">كل معلومة من المصدر، والمصدر مكتوب على الرسمة. ما في رقم بدون مصدر، وإذا ما قدرت تقرا المقال بتطلب النص بدل ما تخمّن.</p>
+          <p data-lang="en">Every fact comes from the source, named on the graphic. No number without a source, and if it cannot read the page it asks for the text instead of guessing.</p>
+        </div>
+        <div class="card">
+          <div class="ico">🎨</div>
+          <h3 data-lang="ar">ألوانك، ومعناها واضح</h3><h3 data-lang="en">Your colours, clear meaning</h3>
+          <p data-lang="ar">بتختار ألوانك واسمك مرة وحدة. والأحمر دايماً فشل، والأخضر نجاح، ومعهم ✓ و✕ لكل الناس.</p>
+          <p data-lang="en">Pick your colours and name once. Red always means fail and green means pass, each with ✓ or ✕ so everyone can read it.</p>
+        </div>
+        <div class="card">
+          <div class="ico">🧪</div>
+          <h3 data-lang="ar">مفحوصة قبل التسليم</h3><h3 data-lang="en">Checked before delivery</h3>
+          <p data-lang="ar">13 فحص على الرسمة الحقيقية: نص طالع برّا، أو فوق نص، أو صندوق مكرر، أو حركة ناقصة. إذا في غلط، بتصلّحه قبل ما توصلك.</p>
+          <p data-lang="en">13 checks on the rendered graphic: text outside or on top of text, a box drawn twice, a step that never animates. It fixes failures before you see them.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="install">
+      <h2 data-lang="ar">التنزيل بـ 3 خطوات</h2>
+      <h2 data-lang="en">Install in 3 steps</h2>
+      <p class="sub" data-lang="ar">بتحتاج Claude Code (أو أي أداة بتدعم SKILL.md زي Cursor).</p>
+      <p class="sub" data-lang="en">You need Claude Code (or any tool that reads SKILL.md, such as Cursor).</p>
+      <ol class="steps">
+        <li>
+          <div>
+            <h3 data-lang="ar">نزّل الزيب</h3><h3 data-lang="en">Download the zip</h3>
+            <p data-lang="ar">من الزر فوق.</p><p data-lang="en">With the button above.</p>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3 data-lang="ar">فكّه بفولدر السكيلز</h3><h3 data-lang="en">Unzip it into your skills folder</h3>
+            <p data-lang="ar">لازم يصير عندك فولدر <code>designing-infographics</code> جوّا:</p>
+            <p data-lang="en">You should end up with a <code>designing-infographics</code> folder inside:</p>
+            <div class="cmd"><span class="os">Windows</span><code>C:\Users\&lt;you&gt;\.claude\skills\</code><button class="copy" type="button">Copy</button></div>
+            <div class="cmd"><span class="os">Mac/Linux</span><code>~/.claude/skills/</code><button class="copy" type="button">Copy</button></div>
+          </div>
+        </li>
+        <li>
+          <div>
+            <h3 data-lang="ar">افتح شات جديد واطلب رسمتك</h3><h3 data-lang="en">Open a new chat and ask</h3>
+            <p data-lang="ar">موضوع، أو رابط مقال:</p><p data-lang="en">A topic, or a link to an article:</p>
+            <div class="cmd"><code>/designing-infographics How does Playwright know when to click?</code><button class="copy" type="button">Copy</button></div>
+          </div>
+        </li>
+      </ol>
+      <div class="note">
+        <p style="margin:0 0 6px" data-lang="ar"><b>للصور والفيديو</b> بتحتاج Node.js، وهدول الأمرين. بدونهم بتاخد صفحة HTML المتحركة، والسكيل بتحكيلك شو ناقص بالزبط.</p>
+        <p style="margin:0 0 6px" data-lang="en"><b>For images and video</b> you need Node.js and these two commands. Without them you still get the animated HTML, and the skill tells you exactly what is missing.</p>
+        <div class="cmd"><span class="os">PNG</span><code>npx playwright install chromium</code><button class="copy" type="button">Copy</button></div>
+        <div class="cmd"><span class="os">GIF, MP4</span><code>winget install Gyan.FFmpeg</code><button class="copy" type="button">Copy</button></div>
+      </div>
+    </section>
+
+    <section>
+      <div class="final">
+        <h2 data-lang="ar">جرّبها على أول مقال صعب بتقراه اليوم</h2>
+        <h2 data-lang="en">Try it on the next hard article you read</h2>
+        <p class="sub" data-lang="ar">مجانية ومفتوحة المصدر.</p>
+        <p class="sub" data-lang="en">Free and open source.</p>
+        <a class="btn btn-main" href="downloads/designing-infographics-v1.0.0.zip" download>
+          <span data-lang="ar">نزّل السكيل</span><span data-lang="en">Download the skill</span>
+        </a>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <span data-lang="ar">عملتها روزان أبو كويك · رخصة MIT · مستوحاة من infographic-design لـ Lu Yi</span>
+    <span data-lang="en">Made by Rosan Abu Kwaik · MIT License · Inspired by infographic-design by Lu Yi</span>
+    · <a href="https://github.com/RosanAbuKwaik/skills-for-software-testers">GitHub</a>
+  </footer>
+</div>
+
+<script>
+  const html = document.documentElement, btn = document.getElementById('lang');
+  function setLang(l) {
+    html.lang = l; html.dir = l === 'ar' ? 'rtl' : 'ltr';
+    btn.textContent = l === 'ar' ? 'English' : 'العربية';
+    try { localStorage.setItem('lang', l); } catch (e) {}
+  }
+  let saved = null; try { saved = localStorage.getItem('lang'); } catch (e) {}
+  setLang(saved === 'en' ? 'en' : 'ar');
+  btn.addEventListener('click', () => setLang(html.lang === 'ar' ? 'en' : 'ar'));
+  document.querySelectorAll('.copy').forEach(b => b.addEventListener('click', async () => {
+    const text = b.previousElementSibling.textContent;
+    try { await navigator.clipboard.writeText(text); b.textContent = '✓'; } catch (e) { b.textContent = '!'; }
+    setTimeout(() => (b.textContent = 'Copy'), 1500);
+  }));
+</script>
+</body>
+</html>
