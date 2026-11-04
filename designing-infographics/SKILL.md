@@ -19,7 +19,6 @@ compatibility: >
   the skill still delivers what it can and says which formats were skipped.
 metadata:
   author: Rosan Abu Kwaik
-  inspired-by: infographic-design by Lu Yi (MIT), see NOTICE
   agentskills_spec: "1.0"
 version: 1.0.0
 ---
